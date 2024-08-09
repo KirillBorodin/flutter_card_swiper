@@ -144,7 +144,7 @@ class _CardSwiperState<T extends Widget> extends State<CardSwiper>
 
   Widget _backItem(BoxConstraints constraints, int index) {
     return Positioned(
-      top: (widget.backCardOffset.dy * index) - _cardAnimation.difference.dy,
+      top: (-widget.backCardOffset.dy * index) - _cardAnimation.difference.dy,
       left: (widget.backCardOffset.dx * index) - _cardAnimation.difference.dx,
       child: Transform.scale(
         scale: _cardAnimation.scale - ((1 - widget.scale) * (index - 1)),
