@@ -90,8 +90,8 @@ class _CardSwiperState<T extends Widget> extends State<CardSwiper>
                             await widget.onTapDisabled?.call();
                           }
                         },
-                        onPanStart: (tapInfo) {
-                          print('onPanStart');
+                        onHorizontalDragStart: (tapInfo) {
+                          print('onHorizontalDragStart');
                           if (!widget.isDisabled) {
                             final renderBox =
                                 context.findRenderObject()! as RenderBox;
@@ -103,8 +103,8 @@ class _CardSwiperState<T extends Widget> extends State<CardSwiper>
                             }
                           }
                         },
-                        onPanUpdate: (tapInfo) {
-                          print('onPanUpdate');
+                        onHorizontalDragUpdate: (tapInfo) {
+                          print('onHorizontalDragUpdate');
                           if (!widget.isDisabled) {
                             setState(
                               () => _cardAnimation.update(
@@ -115,8 +115,8 @@ class _CardSwiperState<T extends Widget> extends State<CardSwiper>
                             );
                           }
                         },
-                        onPanEnd: (tapInfo) {
-                          print('onPanEnd');
+                        onHorizontalDragEnd: (tapInfo) {
+                          print('onHorizontalDragEnd');
                           if (_canSwipe) {
                             _tappedOnTop = false;
                             _onEndAnimation();
