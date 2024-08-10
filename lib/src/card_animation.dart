@@ -12,7 +12,9 @@ class CardAnimation {
     required this.initialOffset,
     this.isHorizontalSwipingEnabled = true,
     this.isVerticalSwipingEnabled = true,
-    this.allowedSwipeDirection = const AllowedSwipeDirection.all(),
+    this.allowedSwipeDirection = const AllowedSwipeDirection.symmetric(
+      horizontal: true,
+    ),
     this.onSwipeDirectionChanged,
   }) : scale = initialScale;
 

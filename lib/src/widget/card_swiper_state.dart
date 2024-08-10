@@ -119,6 +119,35 @@ class _CardSwiperState<T extends Widget> extends State<CardSwiper>
                             _onEndAnimation();
                           }
                         },
+                        onVerticalDragStart: (tapInfo) {
+                          if (!widget.isDisabled) {
+                            final renderBox =
+                                context.findRenderObject()! as RenderBox;
+                            final position =
+                                renderBox.globalToLocal(tapInfo.globalPosition);
+
+                            if (position.dy < renderBox.size.height / 2) {
+                              _tappedOnTop = true;
+                            }
+                          }
+                        },
+                        onVerticalDragUpdate: (tapInfo) {
+                          if (!widget.isDisabled) {
+                            setState(
+                              () => _cardAnimation.update(
+                                tapInfo.delta.dx,
+                                tapInfo.delta.dy,
+                                _tappedOnTop,
+                              ),
+                            );
+                          }
+                        },
+                        onVerticalDragEnd: (tapInfo) {
+                          if (_canSwipe) {
+                            _tappedOnTop = false;
+                            _onEndAnimation();
+                          }
+                        },
                         child: Transform.rotate(
                           angle: _cardAnimation.angle,
                           child: ConstrainedBox(
