@@ -96,7 +96,7 @@ class _CardSwiperState<T extends Widget> extends State<CardSwiper>
       left: _cardAnimation.left,
       top: _cardAnimation.top,
       child: GestureDetector(
-        behavior: HitTestBehavior.translucent,
+        behavior: HitTestBehavior.opaque,
         onTap: () async {
           if (widget.isDisabled) {
             await widget.onTapDisabled?.call();
