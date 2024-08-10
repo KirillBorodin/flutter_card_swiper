@@ -96,18 +96,7 @@ class _CardSwiperState<T extends Widget> extends State<CardSwiper>
       left: _cardAnimation.left,
       top: _cardAnimation.top,
       child: GestureDetector(
-        child: Transform.rotate(
-          angle: _cardAnimation.angle,
-          child: ConstrainedBox(
-            constraints: constraints,
-            child: widget.cardBuilder(
-              context,
-              _currentIndex!,
-              (100 * _cardAnimation.left / widget.threshold).ceil(),
-              (100 * _cardAnimation.top / widget.threshold).ceil(),
-            ),
-          ),
-        ),
+        behavior: HitTestBehavior.translucent,
         onTap: () async {
           if (widget.isDisabled) {
             await widget.onTapDisabled?.call();
@@ -138,6 +127,18 @@ class _CardSwiperState<T extends Widget> extends State<CardSwiper>
             _onEndAnimation();
           }
         },
+        child: Transform.rotate(
+          angle: _cardAnimation.angle,
+          child: ConstrainedBox(
+            constraints: constraints,
+            child: widget.cardBuilder(
+              context,
+              _currentIndex!,
+              (100 * _cardAnimation.left / widget.threshold).ceil(),
+              (100 * _cardAnimation.top / widget.threshold).ceil(),
+            ),
+          ),
+        ),
       ),
     );
   }
