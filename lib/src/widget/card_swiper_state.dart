@@ -119,35 +119,9 @@ class _CardSwiperState<T extends Widget> extends State<CardSwiper>
                             _onEndAnimation();
                           }
                         },
-                        onVerticalDragStart: (tapInfo) {
-                          if (!widget.isDisabled) {
-                            final renderBox =
-                                context.findRenderObject()! as RenderBox;
-                            final position =
-                                renderBox.globalToLocal(tapInfo.globalPosition);
-
-                            if (position.dy < renderBox.size.height / 2) {
-                              _tappedOnTop = true;
-                            }
-                          }
-                        },
-                        onVerticalDragUpdate: (tapInfo) {
-                          if (!widget.isDisabled) {
-                            setState(
-                              () => _cardAnimation.update(
-                                tapInfo.delta.dx,
-                                tapInfo.delta.dy,
-                                _tappedOnTop,
-                              ),
-                            );
-                          }
-                        },
-                        onVerticalDragEnd: (tapInfo) {
-                          if (_canSwipe) {
-                            _tappedOnTop = false;
-                            _onEndAnimation();
-                          }
-                        },
+                        // TODO: Add support for vertical scroll direction.
+                        // Note: The onPadStart, onPanUpdate, and onPanEnd events are not triggering in some cases.
+                        // Further investigation is needed to determine the cause.
                         child: Transform.rotate(
                           angle: _cardAnimation.angle,
                           child: ConstrainedBox(
