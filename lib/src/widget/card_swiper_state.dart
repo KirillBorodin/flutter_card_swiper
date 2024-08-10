@@ -80,7 +80,65 @@ class _CardSwiperState<T extends Widget> extends State<CardSwiper>
                 clipBehavior: Clip.none,
                 fit: StackFit.expand,
                 children: List.generate(numberOfCardsOnScreen(), (index) {
-                  if (index == 0) return _frontItem(constraints);
+                  if (index == 0) {
+                    return Positioned(
+                      left: _cardAnimation.left,
+                      top: _cardAnimation.top,
+                      child: GestureDetector(
+                        onTap: () async {
+                          if (widget.isDisabled) {
+                            await widget.onTapDisabled?.call();
+                          }
+                        },
+                        onPanStart: (tapInfo) {
+                          print('onPanStart');
+                          if (!widget.isDisabled) {
+                            final renderBox =
+                                context.findRenderObject()! as RenderBox;
+                            final position =
+                                renderBox.globalToLocal(tapInfo.globalPosition);
+
+                            if (position.dy < renderBox.size.height / 2) {
+                              _tappedOnTop = true;
+                            }
+                          }
+                        },
+                        onPanUpdate: (tapInfo) {
+                          print('onPanUpdate');
+                          if (!widget.isDisabled) {
+                            setState(
+                              () => _cardAnimation.update(
+                                tapInfo.delta.dx,
+                                tapInfo.delta.dy,
+                                _tappedOnTop,
+                              ),
+                            );
+                          }
+                        },
+                        onPanEnd: (tapInfo) {
+                          print('onPanEnd');
+                          if (_canSwipe) {
+                            _tappedOnTop = false;
+                            _onEndAnimation();
+                          }
+                        },
+                        child: Transform.rotate(
+                          angle: _cardAnimation.angle,
+                          child: ConstrainedBox(
+                            constraints: constraints,
+                            child: widget.cardBuilder(
+                              context,
+                              _currentIndex!,
+                              (100 * _cardAnimation.left / widget.threshold)
+                                  .ceil(),
+                              (100 * _cardAnimation.top / widget.threshold)
+                                  .ceil(),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
                   return _backItem(constraints, index);
                 }).reversed.toList(),
               );
@@ -88,61 +146,6 @@ class _CardSwiperState<T extends Widget> extends State<CardSwiper>
           ),
         );
       },
-    );
-  }
-
-  Widget _frontItem(BoxConstraints constraints) {
-    return Positioned(
-      left: _cardAnimation.left,
-      top: _cardAnimation.top,
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () async {
-          if (widget.isDisabled) {
-            await widget.onTapDisabled?.call();
-          }
-        },
-        onPanStart: (tapInfo) {
-          print('onPanStart');
-          if (!widget.isDisabled) {
-            final renderBox = context.findRenderObject()! as RenderBox;
-            final position = renderBox.globalToLocal(tapInfo.globalPosition);
-
-            if (position.dy < renderBox.size.height / 2) _tappedOnTop = true;
-          }
-        },
-        onPanUpdate: (tapInfo) {
-          print('onPanUpdate');
-          if (!widget.isDisabled) {
-            setState(
-              () => _cardAnimation.update(
-                tapInfo.delta.dx,
-                tapInfo.delta.dy,
-                _tappedOnTop,
-              ),
-            );
-          }
-        },
-        onPanEnd: (tapInfo) {
-          print('onPanEnd');
-          if (_canSwipe) {
-            _tappedOnTop = false;
-            _onEndAnimation();
-          }
-        },
-        child: Transform.rotate(
-          angle: _cardAnimation.angle,
-          child: ConstrainedBox(
-            constraints: constraints,
-            child: widget.cardBuilder(
-              context,
-              _currentIndex!,
-              (100 * _cardAnimation.left / widget.threshold).ceil(),
-              (100 * _cardAnimation.top / widget.threshold).ceil(),
-            ),
-          ),
-        ),
-      ),
     );
   }
 
